@@ -171,14 +171,7 @@ canvas.mini-chart{width:100%;height:60px;display:block;}
 
 /* ══ MUSCLE DIAGRAM TAB ══ */
 #page-muscle{padding:1rem;max-width:700px;margin:0 auto;}
-.muscle-header{
-  font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;
-  margin-bottom:.3rem;text-align:center;
-}
-.muscle-sub{
-  font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.2em;
-  color:var(--muted);text-transform:uppercase;text-align:center;margin-bottom:1.2rem;
-}
+
 .muscle-views{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
 .muscle-view{flex:1;min-width:130px;max-width:220px;text-align:center;}
 .muscle-view-label{
@@ -301,6 +294,11 @@ canvas.vol-canvas{width:100%;display:block;}
 .ratio-meta{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.08em;color:var(--muted);}
 .ratio-note{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.08em;color:var(--muted);margin-top:.05rem;}
 
+/* ══ iOS PAGE HEADERS ══ */
+.ios-page-header{padding:1.1rem 1rem .5rem;max-width:900px;margin:0 auto;}
+.ios-page-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.05em;line-height:1;color:var(--text);}
+.ios-page-subtitle{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.25rem;}
+
 /* ══ BOTTOM NAV ══ */
 .bottom-nav{
   position:fixed;
@@ -311,7 +309,6 @@ canvas.vol-canvas{width:100%;display:block;}
   background:#0f1820;
   border:1px solid var(--border);
   border-radius:20px;
-  box-shadow:0 -2px 0 #080c0e,0 8px 40px rgba(0,0,0,.8),0 0 0 1px #080c0e;
   display:flex;align-items:center;justify-content:space-around;
   padding:0 .5rem;
   /* Extra bottom padding handled by positioning above */
@@ -420,13 +417,19 @@ canvas.vol-canvas{width:100%;display:block;}
 
 <!-- ══ PAGE: HOME ══ -->
 <div class="tab-page active" id="page-home">
+  <div class="ios-page-header">
+    <div class="ios-page-title">Lifts</div>
+    <div class="ios-page-subtitle">Track your progress</div>
+  </div>
   <main id="cards"></main>
 </div>
 
 <!-- ══ PAGE: MUSCLE ══ -->
 <div class="tab-page" id="page-muscle">
-  <div class="muscle-header">Muscle Map</div>
-  <div class="muscle-sub">Color = your best rank per muscle group</div>
+  <div class="ios-page-header">
+    <div class="ios-page-title">Muscle Map</div>
+    <div class="ios-page-subtitle">Color = your best rank per muscle group</div>
+  </div>
   <div class="muscle-views">
     <div class="muscle-view">
       <div class="muscle-view-label">Front</div>
@@ -445,6 +448,10 @@ canvas.vol-canvas{width:100%;display:block;}
 
 <!-- ══ PAGE: STATS ══ -->
 <div class="tab-page" id="page-stats">
+  <div class="ios-page-header">
+    <div class="ios-page-title">Statistics</div>
+    <div class="ios-page-subtitle">Your training insights</div>
+  </div>
   <div id="stats-content"></div>
 </div>
 
