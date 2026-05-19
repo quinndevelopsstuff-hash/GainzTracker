@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#080c0e">
+<title>IRON LOG</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#080c0e;--panel:#0f1518;--card:#131b1f;--border:#1e2a30;
+  --text:#dde6ea;--muted:#52676f;--accent:#00d4ff;--danger:#ff4545;
+  --sb:env(safe-area-inset-bottom,0px);
+  --nav-h:60px;
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Barlow',sans-serif;
+  min-height:100dvh;overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + var(--sb) + 1rem);
+}
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ══ HEADER ══ */
+header{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;gap:.85rem;
+  padding:.8rem 1rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(8,12,14,.93);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.logo-icon{
+  width:38px;height:38px;flex-shrink:0;
+  background:var(--accent);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#080c0e;
+  box-shadow:0 0 20px rgba(0,212,255,.45);
+}
+.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.08em;line-height:1;}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;}
+.hdr-right{margin-left:auto;text-align:right;flex-shrink:0;}
+.hdr-right span{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+.hdr-right strong{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--accent);}
+
+/* ══ RANK LEGEND ══ */
+.rank-legend{display:flex;flex-wrap:wrap;gap:.3rem .8rem;padding:.55rem 1rem;border-bottom:1px solid var(--border);background:var(--panel);}
+.rl-item{display:flex;align-items:center;gap:.28rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.rl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ══ TAB PAGES ══ */
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+/* ══ HOME GRID ══ */
+#page-home main{
+  max-width:900px;margin:0 auto;padding:1rem;
+  display:grid;grid-template-columns:1fr;gap:1rem;
+}
+@media(min-width:600px){#page-home main{grid-template-columns:1fr 1fr;padding:1.2rem;gap:1.2rem;}}
+@media(min-width:900px){#page-home main{grid-template-columns:1fr 1fr 1fr;}}
+
+/* ══ LIFT CARD ══ */
+.lift-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;animation:fadeUp .45s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.lift-card:nth-child(1){animation-delay:.04s}.lift-card:nth-child(2){animation-delay:.08s}
+.lift-card:nth-child(3){animation-delay:.12s}.lift-card:nth-child(4){animation-delay:.16s}
+.lift-card:nth-child(5){animation-delay:.20s}.lift-card:nth-child(6){animation-delay:.24s}
+.lift-card:nth-child(7){animation-delay:.28s}.lift-card:nth-child(8){animation-delay:.32s}
+.card-bar{height:3px;width:100%;transition:background .4s;}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:.8rem 1rem .4rem;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.05em;line-height:1.1;}
+.card-sub{font-size:.62rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.15em;text-transform:uppercase;margin-top:.08rem;}
+.rank-badge{text-align:right;flex-shrink:0;margin-left:.5rem;}
+.rank-emoji{font-size:1.15rem;display:block;line-height:1;}
+.rank-name{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.08em;transition:color .4s;white-space:nowrap;}
+.cw-wrap{display:flex;align-items:flex-end;justify-content:center;gap:.55rem;padding:.15rem 1rem .6rem;}
+.cw-block{text-align:center;}
+.cw-num{font-family:'Bebas Neue',sans-serif;font-size:2.6rem;letter-spacing:.03em;line-height:1;transition:color .4s;}
+.cw-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;}
+.cw-divider{width:1px;height:32px;background:var(--border);flex-shrink:0;margin-bottom:.3rem;}
+.cw-1rm-num{font-family:'Bebas Neue',sans-serif;font-size:1.85rem;letter-spacing:.03em;line-height:1;color:var(--accent);}
+.prog-wrap{padding:0 1rem .7rem;}
+.prog-track{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:.26rem;}
+.prog-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1),background .4s;}
+.prog-labels{display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;}
+.input-area{padding:0 1rem .8rem;}
+.input-row{display:flex;gap:.4rem;margin-bottom:.4rem;}
+.w-input{
+  flex:1;min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  padding:.58rem .65rem;outline:none;transition:border-color .2s;font-size:16px;
+}
+.w-input:focus{border-color:var(--accent);}
+.w-input::placeholder{color:var(--muted);font-weight:400;font-size:13px;}
+.log-btn{
+  background:var(--accent);color:#080c0e;border:none;border-radius:6px;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;
+  padding:0 1rem;cursor:pointer;min-height:44px;min-width:56px;flex-shrink:0;
+  transition:opacity .15s,transform .1s;
+}
+.log-btn:active{transform:scale(.95);opacity:.85;}
+.orm-preview{
+  display:flex;align-items:center;gap:.35rem;
+  font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;color:var(--muted);min-height:1.1rem;
+}
+.orm-val{font-weight:700;font-size:.78rem;}
+.chart-section{border-top:1px solid var(--border);padding:.55rem 1rem .65rem;}
+.chart-label{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center;}
+.chart-label span{color:var(--text);}
+canvas.mini-chart{width:100%;height:60px;display:block;}
+.empty-chart{display:flex;align-items:center;justify-content:center;height:52px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;}
+.hist-toggle{
+  width:100%;background:none;border:none;border-top:1px solid var(--border);color:var(--muted);
+  font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.5rem 1rem;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;
+  transition:color .2s;min-height:42px;
+}
+.hist-toggle:active{color:var(--text);}
+.hist-toggle .arr{transition:transform .25s;font-size:.75rem;}
+.hist-toggle.open .arr{transform:rotate(180deg);}
+.hist-list{display:none;padding:0 1rem .75rem;max-height:165px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.hist-list.vis{display:block;}
+.hist-list::-webkit-scrollbar{width:3px;}
+.hist-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.h-entry{display:grid;grid-template-columns:1.5rem 1fr auto auto auto;align-items:center;gap:.35rem;padding:.28rem 0;border-bottom:1px solid var(--border);font-size:.75rem;}
+.h-entry:last-child{border-bottom:none;}
+.h-sess{color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.62rem;text-align:center;}
+.h-w{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.88rem;white-space:nowrap;}
+.h-reps{color:var(--muted);font-size:.65rem;white-space:nowrap;}
+.h-1rm{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;white-space:nowrap;color:var(--accent);}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.72rem;padding:.15rem .25rem;min-width:26px;min-height:26px;display:flex;align-items:center;justify-content:center;transition:color .15s;}
+.del-btn:active{color:var(--danger);}
+.no-log{color:var(--muted);font-size:.7rem;font-style:italic;padding:.4rem 0 .1rem;}
+@keyframes rankUp{0%{transform:scale(1);}40%{transform:scale(1.28);}100%{transform:scale(1);}}
+.flash{animation:rankUp .5s ease;}
+
+/* ══ MUSCLE DIAGRAM TAB ══ */
+#page-muscle{padding:1rem;max-width:700px;margin:0 auto;}
+.muscle-header{
+  font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;
+  margin-bottom:.3rem;text-align:center;
+}
+.muscle-sub{
+  font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.2em;
+  color:var(--muted);text-transform:uppercase;text-align:center;margin-bottom:1.2rem;
+}
+.muscle-views{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.muscle-view{flex:1;min-width:130px;max-width:220px;text-align:center;}
+.muscle-view-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;
+}
+.muscle-svg-wrap{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:.6rem .5rem;
+}
+.muscle-svg-wrap svg{width:100%;height:auto;display:block;}
+
+/* muscle region fill — set by JS */
+.m-region{transition:fill .5s,filter .5s;cursor:default;}
+.m-region:not([data-rank]){fill:#1e2a30;}
+
+.muscle-legend{margin-top:1.2rem;}
+.muscle-legend-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.2em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.6rem;text-align:center;
+}
+.muscle-legend-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.4rem .8rem;
+}
+.ml-item{
+  display:flex;align-items:center;gap:.45rem;
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:.45rem .7rem;
+}
+.ml-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ml-name{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.1em;flex:1;}
+.ml-rank{font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.06em;white-space:nowrap;}
+.ml-no{color:var(--muted);font-size:.65rem;font-style:italic;}
+
+/* ══ STATS TAB ══ */
+#page-stats{padding:1rem;max-width:700px;margin:0 auto;}
+.stats-section{margin-bottom:1.5rem;}
+.stats-section-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.07em;
+  color:var(--text);margin-bottom:.7rem;display:flex;align-items:center;gap:.45rem;
+  border-bottom:1px solid var(--border);padding-bottom:.45rem;
+}
+/* Summary pills */
+.stats-pills{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;}
+@media(min-width:460px){.stats-pills{grid-template-columns:repeat(4,1fr);}}
+.stat-pill{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.65rem .7rem;text-align:center;
+}
+.stat-pill-num{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:.03em;line-height:1;color:var(--accent);}
+.stat-pill-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:.12rem;}
+/* Streaks */
+.streak-row{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;}
+.streak-card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.7rem .9rem;display:flex;align-items:center;gap:.65rem;
+}
+.streak-icon{font-size:1.5rem;line-height:1;flex-shrink:0;}
+.streak-num{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.03em;line-height:1;}
+.streak-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+/* Volume by lift bars */
+.lift-vol-list{display:flex;flex-direction:column;gap:.5rem;}
+.lift-vol-row{display:grid;grid-template-columns:108px 1fr 68px;align-items:center;gap:.55rem;}
+.lift-vol-name{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lift-vol-bar-track{height:7px;background:var(--border);border-radius:99px;overflow:hidden;}
+.lift-vol-bar-fill{height:100%;border-radius:99px;transition:width .7s cubic-bezier(.34,1.56,.64,1);}
+.lift-vol-val{font-family:'Bebas Neue',sans-serif;font-size:.8rem;color:var(--muted);text-align:right;white-space:nowrap;}
+/* Volume trend canvas */
+.vol-chart-wrap{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.8rem 1rem .7rem;
+}
+.vol-chart-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.55rem;}
+.vol-chart-title{font-family:'Barlow Condensed',sans-serif;font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.vol-chart-total{font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:var(--accent);}
+canvas.vol-canvas{width:100%;display:block;}
+/* Day-of-week heatmap */
+.dow-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;}
+.dow-cell{
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:.45rem .15rem .4rem;text-align:center;
+}
+.dow-day{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.dow-count{font-family:'Bebas Neue',sans-serif;font-size:1rem;line-height:1;}
+.dow-pip{height:3px;border-radius:99px;margin-top:.28rem;transition:background .4s;}
+/* Avg reps grid */
+.avg-reps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;}
+@media(min-width:460px){.avg-reps-grid{grid-template-columns:repeat(4,1fr);}}
+.avg-rep-card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.6rem .7rem;
+}
+.avg-rep-name{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.avg-rep-num{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;line-height:1;}
+.avg-rep-sub{font-family:'Barlow Condensed',sans-serif;font-size:.55rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+/* Best session */
+.best-sess-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;}
+.best-sess-card{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.65rem .8rem;
+}
+.best-sess-lift{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.best-sess-val{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;line-height:1;}
+.best-sess-sub{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.1em;color:var(--muted);}
+/* Empty */
+.stats-empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;}
+.stats-empty-icon{font-size:2.5rem;margin-bottom:.8rem;}
+
+/* Strength Ratios */
+.ratio-list{display:flex;flex-direction:column;gap:.6rem;}
+.ratio-row{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  padding:.65rem .9rem;
+}
+.ratio-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem;}
+.ratio-name{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;}
+.ratio-status{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.06em;}
+.ratio-bar-track{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:.28rem;}
+.ratio-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+.ratio-meta{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.08em;color:var(--muted);}
+.ratio-note{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.08em;color:var(--muted);margin-top:.05rem;}
+
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  height:calc(var(--nav-h) + var(--sb));
+  background:rgba(10,15,18,.97);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding-top:.3rem;
+  padding-bottom:var(--sb);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:.2rem;
+  background:none;border:none;cursor:pointer;
+  padding:.35rem .2rem;transition:opacity .15s;
+  color:var(--muted);
+  min-height:44px;
+}
+.nav-btn.active{color:var(--accent);}
+.nav-btn:active{opacity:.7;}
+.nav-icon{font-size:1.3rem;line-height:1;}
+.nav-label{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;}
+
+/* ══ REST TIMER ══ */
+#rest-timer{
+  position:fixed;bottom:calc(var(--nav-h) + var(--sb) + .7rem);right:1rem;
+  z-index:8000;
+  background:rgba(10,16,20,.97);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:.7rem .9rem .65rem;
+  display:flex;align-items:center;gap:.75rem;
+  box-shadow:0 4px 32px rgba(0,0,0,.6);
+  backdrop-filter:blur(12px);
+  transform:translateY(120px);
+  opacity:0;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+  min-width:210px;
+  pointer-events:none;
+}
+#rest-timer.visible{transform:translateY(0);opacity:1;pointer-events:all;}
+.rt-ring-wrap{position:relative;width:44px;height:44px;flex-shrink:0;}
+#rt-svg{width:44px;height:44px;transform:rotate(-90deg);}
+#rt-track{fill:none;stroke:var(--border);stroke-width:3.5;}
+#rt-arc{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;transition:stroke-dashoffset .95s linear,stroke .4s;}
+.rt-center{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.04em;
+  color:var(--text);
+}
+.rt-right{flex:1;min-width:0;}
+.rt-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.rt-presets{display:flex;gap:.3rem;margin-bottom:.35rem;}
+.rt-preset{
+  background:var(--border);border:none;border-radius:4px;color:var(--text);
+  font-family:'Bebas Neue',sans-serif;font-size:.8rem;letter-spacing:.05em;
+  padding:.18rem .45rem;cursor:pointer;transition:background .15s;
+}
+.rt-preset:hover,.rt-preset.active-preset{background:var(--accent);color:#080c0e;}
+.rt-actions{display:flex;gap:.3rem;}
+.rt-btn{
+  flex:1;background:var(--panel);border:1px solid var(--border);border-radius:5px;
+  color:var(--text);font-family:'Barlow Condensed',sans-serif;
+  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.28rem .4rem;cursor:pointer;transition:background .15s,color .15s;
+}
+.rt-btn:hover{background:var(--border);}
+.rt-btn.rt-close{color:var(--muted);}
+@keyframes timerDone{0%,100%{box-shadow:0 4px 32px rgba(0,0,0,.6);}50%{box-shadow:0 0 40px rgba(61,220,132,.5);}}
+#rest-timer.done{animation:timerDone .5s ease 2;}
+
+/* ══ DELOAD BANNER ══ */
+.deload-banner{
+  display:flex;align-items:center;gap:.5rem;
+  background:#ff454512;border-top:1px solid #ff454530;
+  padding:.45rem 1rem;
+  font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;
+  color:#ff8080;
+}
+.deload-icon{font-size:.9rem;flex-shrink:0;}
+
+/* ══ TOAST ══ */
+#toast{
+  position:fixed;bottom:calc(var(--nav-h) + var(--sb) + .8rem);left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background:var(--panel);border:1px solid var(--accent);color:var(--text);
+  font-family:'Barlow Condensed',sans-serif;font-size:.88rem;letter-spacing:.1em;
+  padding:.55rem 1.5rem;border-radius:6px;
+  box-shadow:0 0 28px rgba(0,212,255,.2);
+  z-index:10000;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .35s;
+  opacity:0;pointer-events:none;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">IL</div>
+  <div>
+    <div class="hdr-title">IRON LOG</div>
+    <div class="hdr-sub">Beginner · lbs · Epley 1RM</div>
+  </div>
+  <div class="hdr-right">
+    <span>Sessions</span>
+    <strong id="total-count">0</strong>
+  </div>
+</header>
+
+<div class="rank-legend" id="rank-legend"></div>
+
+<!-- ══ PAGE: HOME ══ -->
+<div class="tab-page active" id="page-home">
+  <main id="cards"></main>
+</div>
+
+<!-- ══ PAGE: MUSCLE ══ -->
+<div class="tab-page" id="page-muscle">
+  <div class="muscle-header">Muscle Map</div>
+  <div class="muscle-sub">Color = your best rank per muscle group</div>
+  <div class="muscle-views">
+    <div class="muscle-view">
+      <div class="muscle-view-label">Front</div>
+      <div class="muscle-svg-wrap" id="svg-front-wrap"></div>
+    </div>
+    <div class="muscle-view">
+      <div class="muscle-view-label">Back</div>
+      <div class="muscle-svg-wrap" id="svg-back-wrap"></div>
+    </div>
+  </div>
+  <div class="muscle-legend">
+    <div class="muscle-legend-title">Muscle Group Rankings</div>
+    <div class="muscle-legend-grid" id="muscle-legend-grid"></div>
+  </div>
+</div>
+
+<!-- ══ PAGE: STATS ══ -->
+<div class="tab-page" id="page-stats">
+  <div id="stats-content"></div>
+</div>
+
+<!-- ══ REST TIMER ══ -->
+<div id="rest-timer">
+  <div class="rt-ring-wrap">
+    <svg id="rt-svg" viewBox="0 0 44 44">
+      <circle id="rt-track" cx="22" cy="22" r="18"/>
+      <circle id="rt-arc"   cx="22" cy="22" r="18"/>
+    </svg>
+    <div class="rt-center" id="rt-display">—</div>
+  </div>
+  <div class="rt-right">
+    <div class="rt-label">Rest Timer</div>
+    <div class="rt-presets">
+      <button class="rt-preset" onclick="startTimer(60)">1m</button>
+      <button class="rt-preset" onclick="startTimer(90)">90s</button>
+      <button class="rt-preset" onclick="startTimer(120)">2m</button>
+      <button class="rt-preset" onclick="startTimer(180)">3m</button>
+    </div>
+    <div class="rt-actions">
+      <button class="rt-btn" onclick="pauseTimer()">⏸ Pause</button>
+      <button class="rt-btn" onclick="resetTimer()">↺ Reset</button>
+      <button class="rt-btn rt-close" onclick="hideTimer()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('home',this)">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('muscle',this)">
+    <span class="nav-icon">💪</span>
+    <span class="nav-label">Muscles</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('stats',this)">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Stats</span>
+  </button>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA — RANKS
+// ══════════════════════════════════════════════════════
+const RANKS=[
+  {name:"Tin",              emoji:"🪨",color:"#4b5563"},
+  {name:"Stone",            emoji:"🗿",color:"#78716c"},
+  {name:"Copper",           emoji:"🪙",color:"#b87333"},
+  {name:"Iron",             emoji:"⚙️",color:"#a8a29e"},
+  {name:"Bronze",           emoji:"🏅",color:"#cd7f32"},
+  {name:"Silver",           emoji:"🥈",color:"#c0c0c0"},
+  {name:"Gold",             emoji:"🥇",color:"#f5c842"},
+  {name:"Sapphire",         emoji:"💎",color:"#7dd3fc"},
+  {name:"Amethyst",         emoji:"🔮",color:"#c084fc"},
+  {name:"Platinum",         emoji:"✨",color:"#67e8f9"},
+  {name:"Ruby",             emoji:"🔴",color:"#f97316"},
+  {name:"Ultimate Gym Cell",emoji:"👑",color:"#ff4545"},
+];
+
+// ══════════════════════════════════════════════════════
+//  DATA — LIFTS
+// ══════════════════════════════════════════════════════
+const LIFTS=[
+  {id:"bench",    name:"Bench Press",       sub:"Barbell · Flat",         thresholds:[45,75,100,125,155,185,215,245,275,315,365]},
+  {id:"deadlift", name:"Deadlift",          sub:"Barbell · Conventional", thresholds:[65,115,155,195,245,295,345,395,445,495,565]},
+  {id:"squat",    name:"Squat",             sub:"Barbell · Back Squat",   thresholds:[45,95,135,165,205,245,285,325,365,405,455]},
+  {id:"chestpress",name:"Chest Press",      sub:"Machine · Seated",       thresholds:[40,70,95,120,150,180,210,240,270,310,355]},
+  {id:"incline",  name:"Incline Bench",     sub:"Barbell · 30–45°",       thresholds:[35,65,90,115,140,165,195,225,255,290,335]},
+  {id:"legpress", name:"Leg Press",         sub:"Machine · 45°",          thresholds:[90,160,225,295,365,445,525,615,705,795,905]},
+  {id:"trapbar",  name:"Trap Bar Deadlift", sub:"Hex Bar · High Handle",  thresholds:[75,125,175,225,275,325,385,445,505,565,635]},
+  {id:"dips",     name:"Weighted Dips",     sub:"Belt · Added Weight",    thresholds:[0,10,20,35,50,70,90,115,145,175,215]},
+];
+
+// lift → muscles worked (for muscle map)
+const LIFT_MUSCLES={
+  bench:     ['chest','front-delt','triceps'],
+  deadlift:  ['lower-back','glutes','hamstrings','traps'],
+  squat:     ['quads','glutes','hamstrings','lower-back'],
+  chestpress:['chest','front-delt','triceps'],
+  incline:   ['upper-chest','front-delt','triceps'],
+  legpress:  ['quads','glutes'],
+  trapbar:   ['traps','lower-back','glutes','hamstrings'],
+  dips:      ['chest','triceps','front-delt'],
+};
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+const epley=(w,r)=>r<=1?w:Math.round(w*(1+r/30));
+function rankIdx(lift,w){for(let i=0;i<lift.thresholds.length;i++)if(w<lift.thresholds[i])return i;return RANKS.length-1;}
+function rankProg(lift,w){const i=rankIdx(lift,w);if(i===RANKS.length-1)return 1;const lo=i===0?0:lift.thresholds[i-1],hi=lift.thresholds[i];return Math.min(1,Math.max(0,(w-lo)/(hi-lo)));}
+function nextThresh(lift,w){const i=rankIdx(lift,w);return i<RANKS.length-1?lift.thresholds[i]:null;}
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let state={};
+function loadState(){
+  try{const r=localStorage.getItem('ironlog_v4');if(r)state=JSON.parse(r);}catch(e){}
+  LIFTS.forEach(l=>{if(!state[l.id])state[l.id]={bestOrm:0,history:[]};});
+}
+function saveState(){try{localStorage.setItem('ironlog_v4',JSON.stringify(state));}catch(e){}}
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='muscle') renderMuscleMap();
+  if(name==='stats') renderStats();
+}
+
+// ══════════════════════════════════════════════════════
+//  LEGEND
+// ══════════════════════════════════════════════════════
+function buildLegend(){
+  const el=document.getElementById('rank-legend');
+  RANKS.forEach(r=>{
+    const d=document.createElement('div');d.className='rl-item';
+    d.innerHTML=`<span class="rl-dot" style="background:${r.color}"></span>${r.emoji} ${r.name}`;
+    el.appendChild(d);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  MINI CHART — session on X axis
+// ══════════════════════════════════════════════════════
+function drawChart(id){
+  const lift=LIFTS.find(l=>l.id===id);
+  const hist=state[id].history;
+  const sec=document.getElementById(`csec-${id}`);
+  if(hist.length<2){
+    sec.innerHTML=`<div class="chart-label">1RM by Session</div><div class="empty-chart">Log 2+ sessions to see progress</div>`;
+    return;
+  }
+  const pts=hist.slice(-20);
+  const vals=pts.map(e=>e.orm);
+  const minV=Math.min(...vals),maxV=Math.max(...vals),range=maxV-minV||1;
+  const ri=rankIdx(lift,state[id].bestOrm);
+  const col=RANKS[ri].color;
+  const startSess=hist.length-pts.length+1;
+  sec.innerHTML=`
+    <div class="chart-label">1RM by Session <span>Session ${startSess}–${hist.length}</span></div>
+    <canvas class="mini-chart" id="cvs-${id}" width="600" height="120"></canvas>`;
+  requestAnimationFrame(()=>{
+    const cvs=document.getElementById(`cvs-${id}`);if(!cvs)return;
+    const dpr=window.devicePixelRatio||1;
+    const W=cvs.offsetWidth,H=60;
+    cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.height=H+'px';
+    const ctx=cvs.getContext('2d');ctx.scale(dpr,dpr);
+    const PL=4,PR=4,PT=8,PB=18,w=W-PL-PR,h=H-PT-PB;
+    const xOf=i=>PL+(i/(pts.length-1))*w;
+    const yOf=v=>PT+(1-(v-minV)/range)*h;
+    // fill
+    const grad=ctx.createLinearGradient(0,PT,0,H);
+    grad.addColorStop(0,col+'44');grad.addColorStop(1,col+'00');
+    ctx.beginPath();ctx.moveTo(xOf(0),yOf(vals[0]));
+    for(let i=1;i<pts.length;i++)ctx.lineTo(xOf(i),yOf(vals[i]));
+    ctx.lineTo(xOf(pts.length-1),H);ctx.lineTo(xOf(0),H);ctx.closePath();
+    ctx.fillStyle=grad;ctx.fill();
+    // line
+    ctx.beginPath();ctx.moveTo(xOf(0),yOf(vals[0]));
+    for(let i=1;i<pts.length;i++)ctx.lineTo(xOf(i),yOf(vals[i]));
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+    // dots at first, last, peak
+    const special=new Set([0,pts.length-1,vals.indexOf(Math.max(...vals))]);
+    special.forEach(i=>{
+      if(i<0||i>=pts.length)return;
+      const x=xOf(i),y=yOf(vals[i]);
+      ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+      ctx.fillStyle=col;ctx.font=`bold 10px 'Barlow Condensed',sans-serif`;
+      ctx.textAlign=i===0?'left':i===pts.length-1?'right':'center';
+      ctx.fillText(vals[i]+'lb',x,y-5);
+    });
+    // x-axis session labels
+    ctx.fillStyle='#52676f';ctx.font=`9px 'Barlow Condensed',sans-serif`;
+    [[0,'left'],[pts.length-1,'right']].forEach(([i,align])=>{
+      ctx.textAlign=align;
+      ctx.fillText('S'+(startSess+i),xOf(i),H-2);
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  BUILD HOME CARDS
+// ══════════════════════════════════════════════════════
+function buildCards(){
+  const c=document.getElementById('cards');c.innerHTML='';
+  LIFTS.forEach(lift=>{
+    const card=document.createElement('div');card.className='lift-card';card.id=`card-${lift.id}`;
+    card.innerHTML=`
+      <div class="card-bar" id="bar-${lift.id}"></div>
+      <div class="card-header">
+        <div><div class="card-title">${lift.name}</div><div class="card-sub">${lift.sub}</div></div>
+        <div class="rank-badge" id="badge-${lift.id}">
+          <span class="rank-emoji" id="emoji-${lift.id}">—</span>
+          <span class="rank-name" id="rname-${lift.id}">No Log</span>
+        </div>
+      </div>
+      <div class="cw-wrap">
+        <div class="cw-block"><div class="cw-num" id="cw-${lift.id}">—</div><div class="cw-lbl">Best Set</div></div>
+        <div class="cw-divider"></div>
+        <div class="cw-block"><div class="cw-1rm-num" id="orm-${lift.id}">—</div><div class="cw-lbl">Est. 1RM</div></div>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" id="fill-${lift.id}" style="width:0%"></div></div>
+        <div class="prog-labels"><span id="plo-${lift.id}">0</span><span id="phi-${lift.id}">next rank</span></div>
+      </div>
+      <div class="input-area">
+        <div class="input-row">
+          <input class="w-input" id="inp-w-${lift.id}" type="number" inputmode="decimal" min="0" max="2000" step="5" placeholder="Weight (lbs)">
+          <input class="w-input" id="inp-r-${lift.id}" type="number" inputmode="numeric" min="1" max="100" step="1" placeholder="Reps" style="max-width:84px;">
+          <button class="log-btn" onclick="logLift('${lift.id}')">LOG</button>
+        </div>
+        <div class="orm-preview" id="prev-${lift.id}">Weight + reps → est. 1RM</div>
+      </div>
+      <div class="chart-section" id="csec-${lift.id}">
+        <div class="chart-label">1RM by Session</div>
+        <div class="empty-chart">Log 2+ sessions to see progress</div>
+      </div>
+      <button class="hist-toggle" id="htog-${lift.id}" onclick="toggleHist('${lift.id}')">
+        <span>History (0)</span><span class="arr">▾</span>
+      </button>
+      <div class="hist-list" id="hlist-${lift.id}"></div>
+      <div id="deload-${lift.id}"></div>`;
+    c.appendChild(card);
+    const wI=card.querySelector(`#inp-w-${lift.id}`),rI=card.querySelector(`#inp-r-${lift.id}`);
+    function upPrev(){
+      const w=parseFloat(wI.value),r=parseInt(rI.value);
+      const prev=document.getElementById(`prev-${lift.id}`);
+      if(w>0&&r>0){const o=epley(w,r);const rk=RANKS[rankIdx(lift,o)];prev.innerHTML=`Epley 1RM: <span class="orm-val" style="color:${rk.color}">${o} lbs</span> → ${rk.emoji} ${rk.name}`;}
+      else prev.innerHTML='Weight + reps → est. 1RM';
+    }
+    wI.addEventListener('input',upPrev);rI.addEventListener('input',upPrev);
+    rI.addEventListener('keydown',e=>{if(e.key==='Enter')logLift(lift.id);});
+    wI.addEventListener('keydown',e=>{if(e.key==='Enter')rI.focus();});
+    refreshCard(lift.id);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  REFRESH CARD
+// ══════════════════════════════════════════════════════
+function refreshCard(id){
+  const lift=LIFTS.find(l=>l.id===id),data=state[id],best=data.bestOrm;
+  const ri=best>0?rankIdx(lift,best):-1,rank=ri>=0?RANKS[ri]:null,col=rank?rank.color:'#1e2a30';
+  document.getElementById(`bar-${id}`).style.background=col;
+  document.getElementById(`fill-${id}`).style.background=col;
+  document.getElementById(`cw-${id}`).style.color=rank?col:'var(--muted)';
+  document.getElementById(`rname-${id}`).style.color=col;
+  document.getElementById(`emoji-${id}`).textContent=rank?rank.emoji:'—';
+  document.getElementById(`rname-${id}`).textContent=rank?rank.name:'No Log';
+  const bE=data.history.length?data.history.reduce((a,b)=>b.orm>a.orm?b:a):null;
+  document.getElementById(`cw-${id}`).textContent=bE?bE.w+'':'—';
+  document.getElementById(`orm-${id}`).textContent=best>0?best+'':'—';
+  if(best>0){
+    const lo=ri>0?lift.thresholds[ri-1]:0,next=nextThresh(lift,best);
+    document.getElementById(`fill-${id}`).style.width=rankProg(lift,best)*100+'%';
+    document.getElementById(`plo-${id}`).textContent=lo+' lbs';
+    document.getElementById(`phi-${id}`).textContent=next?next+' lbs → '+RANKS[ri+1].name:'👑 MAX RANK';
+  }else{
+    document.getElementById(`fill-${id}`).style.width='0%';
+    document.getElementById(`plo-${id}`).textContent='0';
+    document.getElementById(`phi-${id}`).textContent='next rank';
+  }
+  refreshHist(id);drawChart(id);
+  renderDeloadBanner(id);
+  let t=0;LIFTS.forEach(l=>t+=state[l.id].history.length);
+  document.getElementById('total-count').textContent=t;
+}
+
+// ══════════════════════════════════════════════════════
+//  HISTORY LIST
+// ══════════════════════════════════════════════════════
+function refreshHist(id){
+  const lift=LIFTS.find(l=>l.id===id),data=state[id];
+  const list=document.getElementById(`hlist-${id}`),tog=document.getElementById(`htog-${id}`);
+  const hist=data.history;
+  tog.querySelector('span').textContent=`History (${hist.length})`;
+  if(!hist.length){list.innerHTML='<div class="no-log">No entries yet.</div>';return;}
+  list.innerHTML=[...hist].reverse().map((e,ri)=>{
+    const realIdx=hist.length-1-ri,sessNum=realIdx+1;
+    const r=RANKS[rankIdx(lift,e.orm)];
+    return `<div class="h-entry">
+      <span class="h-sess">S${sessNum}</span>
+      <span class="h-w" style="color:${r.color}">${e.reps}×${e.w}lbs</span>
+      <span class="h-reps">1RM:</span>
+      <span class="h-1rm" style="color:${r.color}">${e.orm}lb ${r.emoji}</span>
+      <button class="del-btn" onclick="delEntry('${id}',${realIdx})">✕</button>
+    </div>`;
+  }).join('');
+}
+function toggleHist(id){
+  document.getElementById(`hlist-${id}`).classList.toggle('vis');
+  document.getElementById(`htog-${id}`).classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+//  LOG LIFT
+// ══════════════════════════════════════════════════════
+function logLift(id){
+  const wI=document.getElementById(`inp-w-${id}`),rI=document.getElementById(`inp-r-${id}`);
+  const w=parseFloat(wI.value),reps=parseInt(rI.value)||1;
+  if(isNaN(w)||w<=0){toast('Enter a valid weight!');wI.focus();return;}
+  if(reps<1||reps>100){toast('Reps must be 1–100');rI.focus();return;}
+  const wR=Math.round(w),orm=epley(wR,reps);
+  const lift=LIFTS.find(l=>l.id===id),data=state[id];
+  const prevRi=data.bestOrm>0?rankIdx(lift,data.bestOrm):-1,newRi=rankIdx(lift,orm);
+  const now=new Date();
+  data.history.push({w:wR,reps,orm,date:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),ts:now.getTime()});
+  const isNew=orm>data.bestOrm;if(isNew)data.bestOrm=orm;
+  saveState();refreshCard(id);
+  const list=document.getElementById(`hlist-${id}`);
+  if(!list.classList.contains('vis'))toggleHist(id);
+  if(isNew&&newRi>prevRi){
+    const badge=document.getElementById(`badge-${id}`);badge.classList.remove('flash');void badge.offsetWidth;badge.classList.add('flash');
+    toast(`🏆 RANK UP → ${RANKS[newRi].emoji} ${RANKS[newRi].name}!`);
+  }else if(isNew){toast(`🔥 New 1RM Best: ${orm} lbs!`);}
+  else toast(`Logged ${wR}lbs × ${reps} → 1RM ~${orm}lbs`);
+  wI.value='';rI.value='';document.getElementById(`prev-${id}`).innerHTML='Weight + reps → est. 1RM';
+  startTimer(timerDuration);
+}
+
+// ══════════════════════════════════════════════════════
+//  DELETE
+// ══════════════════════════════════════════════════════
+function delEntry(id,idx){
+  const data=state[id];data.history.splice(idx,1);
+  data.bestOrm=data.history.length?Math.max(...data.history.map(e=>e.orm)):0;
+  saveState();refreshCard(id);
+}
+
+// ══════════════════════════════════════════════════════
+//  MUSCLE MAP
+// ══════════════════════════════════════════════════════
+// Compute best rank per muscle group from all logs
+function getMuscleRanks(){
+  const mr={};
+  LIFTS.forEach(lift=>{
+    const best=state[lift.id].bestOrm;
+    if(!best)return;
+    const ri=rankIdx(lift,best);
+    const muscles=LIFT_MUSCLES[lift.id]||[];
+    muscles.forEach(m=>{
+      if(mr[m]===undefined||ri>mr[m])mr[m]=ri;
+    });
+  });
+  return mr;
+}
+
+function renderMuscleMap(){
+  const mr=getMuscleRanks();
+  // Build front SVG
+  document.getElementById('svg-front-wrap').innerHTML=buildFrontSVG(mr);
+  document.getElementById('svg-back-wrap').innerHTML=buildBackSVG(mr);
+  renderMuscleLegend(mr);
+}
+
+function mFill(muscle,mr){
+  return mr[muscle]!==undefined?RANKS[mr[muscle]].color+'cc':'#1e2a3088';
+}
+function mGlow(muscle,mr){
+  if(mr[muscle]===undefined)return'';
+  return`filter:drop-shadow(0 0 5px ${RANKS[mr[muscle]].color}88);`;
+}
+
+function buildFrontSVG(mr){
+  const f=m=>mFill(m,mr),g=m=>mGlow(m,mr);
+  const sk='#0d1a20', sw='0.8', dim='#1a2830cc';
+  return `<svg viewBox="0 0 160 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="fgHead" cx="50%" cy="40%"><stop offset="0%" stop-color="#2a3d48"/><stop offset="100%" stop-color="#141c20"/></radialGradient>
+    <linearGradient id="fgAbsG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1e2c34"/><stop offset="100%" stop-color="#131b1f"/></linearGradient>
+    <filter id="glow-f"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <!-- HEAD -->
+  <ellipse cx="80" cy="20" rx="16" ry="18" fill="url(#fgHead)" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Jaw -->
+  <path d="M66,30 Q80,42 94,30" fill="none" stroke="${sk}" stroke-width="0.6"/>
+  <!-- Neck -->
+  <path d="M73,36 Q76,42 76,50 L84,50 Q84,42 87,36 Z" fill="#1d2c34" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Neck muscles (sternocleidomastoid hints) -->
+  <path d="M73,36 Q70,44 72,50" fill="none" stroke="#263540" stroke-width="0.7"/>
+  <path d="M87,36 Q90,44 88,50" fill="none" stroke="#263540" stroke-width="0.7"/>
+
+  <!-- SHOULDERS / FRONT DELT - left -->
+  <path d="M50,55 Q40,52 36,62 Q33,72 40,80 Q46,74 50,68 Z"
+    style="${g('front-delt')}" fill="${f('front-delt')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- SHOULDERS / FRONT DELT - right -->
+  <path d="M110,55 Q120,52 124,62 Q127,72 120,80 Q114,74 110,68 Z"
+    style="${g('front-delt')}" fill="${f('front-delt')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Delt highlight crease -->
+  <path d="M42,62 Q40,68 42,74" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.6"/>
+  <path d="M118,62 Q120,68 118,74" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.6"/>
+
+  <!-- UPPER CHEST - left clavicular head -->
+  <path d="M76,50 Q64,50 52,58 Q48,62 50,66 Q58,60 76,60 Z"
+    style="${g('upper-chest')}" fill="${f('upper-chest')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- UPPER CHEST - right -->
+  <path d="M84,50 Q96,50 108,58 Q112,62 110,66 Q102,60 84,60 Z"
+    style="${g('upper-chest')}" fill="${f('upper-chest')}" stroke="${sk}" stroke-width="${sw}"/>
+
+  <!-- CHEST / PECS - left sternal head -->
+  <path d="M76,60 Q58,60 50,66 Q44,74 48,84 Q56,88 76,84 Q78,74 76,60 Z"
+    style="${g('chest')}" fill="${f('chest')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- CHEST / PECS - right -->
+  <path d="M84,60 Q102,60 110,66 Q116,74 112,84 Q104,88 84,84 Q82,74 84,60 Z"
+    style="${g('chest')}" fill="${f('chest')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Chest centre separation line -->
+  <path d="M80,52 Q79,68 80,86" fill="none" stroke="${sk}" stroke-width="0.8" opacity="0.7"/>
+  <!-- Lower pec fold -->
+  <path d="M50,82 Q65,90 80,86 Q95,90 110,82" fill="none" stroke="${sk}" stroke-width="0.7" opacity="0.6"/>
+
+  <!-- TRICEPS - left (visible lateral head from front) -->
+  <path d="M38,76 Q32,82 32,100 Q32,112 38,118 Q44,110 46,94 Q48,82 44,76 Z"
+    style="${g('triceps')}" fill="${f('triceps')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- TRICEPS - right -->
+  <path d="M122,76 Q128,82 128,100 Q128,112 122,118 Q116,110 114,94 Q112,82 116,76 Z"
+    style="${g('triceps')}" fill="${f('triceps')}" stroke="${sk}" stroke-width="${sw}"/>
+
+  <!-- BICEPS - left (front of arm, not a tracked muscle but adds realism) -->
+  <path d="M44,76 Q38,84 38,100 Q42,108 48,104 Q50,92 50,78 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- BICEPS - right -->
+  <path d="M116,76 Q122,84 122,100 Q118,108 112,104 Q110,92 110,78 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+
+  <!-- FOREARMS - left -->
+  <path d="M36,116 Q32,122 33,138 Q36,144 40,143 Q46,140 48,134 Q46,118 42,115 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- FOREARMS - right -->
+  <path d="M124,116 Q128,122 127,138 Q124,144 120,143 Q114,140 112,134 Q114,118 118,115 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Forearm tendon lines -->
+  <path d="M38,120 Q37,130 38,138" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+  <path d="M122,120 Q123,130 122,138" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- ABS - rectus abdominis blocks -->
+  <!-- Core torso shape -->
+  <path d="M76,84 Q60,86 56,100 Q54,120 58,140 Q68,144 80,143 Q92,144 102,140 Q106,120 104,100 Q100,86 84,84 Z"
+    fill="url(#fgAbsG)" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Linea alba (centre line) -->
+  <line x1="80" y1="86" x2="80" y2="141" stroke="${sk}" stroke-width="1" opacity="0.8"/>
+  <!-- Ab horizontal lines -->
+  <path d="M62,98 Q71,101 80,100 Q89,101 98,98" fill="none" stroke="${sk}" stroke-width="0.9" opacity="0.7"/>
+  <path d="M61,111 Q70,114 80,113 Q90,114 99,111" fill="none" stroke="${sk}" stroke-width="0.9" opacity="0.7"/>
+  <path d="M61,124 Q70,127 80,126 Q90,127 99,124" fill="none" stroke="${sk}" stroke-width="0.9" opacity="0.7"/>
+  <!-- Oblique hints -->
+  <path d="M57,102 Q54,114 56,128" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <path d="M103,102 Q106,114 104,128" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- HIP / PELVIS shape -->
+  <path d="M58,140 Q62,148 72,150 Q76,152 80,152 Q84,152 88,150 Q98,148 102,140 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+
+  <!-- QUADS - left: vastus lateralis + rectus femoris -->
+  <path d="M58,150 Q46,158 44,182 Q44,206 50,220 Q58,226 66,222 Q72,208 72,182 Q72,158 68,150 Z"
+    style="${g('quads')}" fill="${f('quads')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Left quad medialis (inner teardrop) -->
+  <path d="M68,150 Q72,160 74,182 Q74,206 70,218 Q76,218 80,214 Q82,196 78,170 Q76,156 72,150 Z"
+    style="${g('quads')}" fill="${f('quads')}" stroke="${sk}" stroke-width="${sw}" opacity="0.85"/>
+  <!-- QUADS - right: vastus lateralis -->
+  <path d="M102,150 Q114,158 116,182 Q116,206 110,220 Q102,226 94,222 Q88,208 88,182 Q88,158 92,150 Z"
+    style="${g('quads')}" fill="${f('quads')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Right quad medialis -->
+  <path d="M92,150 Q88,160 86,182 Q86,206 90,218 Q84,218 80,214 Q78,196 82,170 Q84,156 88,150 Z"
+    style="${g('quads')}" fill="${f('quads')}" stroke="${sk}" stroke-width="${sw}" opacity="0.85"/>
+  <!-- Quad separation lines -->
+  <path d="M60,158 Q62,180 62,206" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <path d="M100,158 Q98,180 98,206" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <!-- Groin gap -->
+  <path d="M72,150 Q76,155 80,154 Q84,155 88,150 Q84,148 80,148 Q76,148 72,150 Z" fill="#0f1518"/>
+
+  <!-- KNEES -->
+  <ellipse cx="60" cy="228" rx="12" ry="9" fill="#1a2830" stroke="${sk}" stroke-width="${sw}"/>
+  <ellipse cx="100" cy="228" rx="12" ry="9" fill="#1a2830" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Kneecap (patella) -->
+  <ellipse cx="60" cy="226" rx="6" ry="5" fill="#1e2c34" stroke="${sk}" stroke-width="0.5"/>
+  <ellipse cx="100" cy="226" rx="6" ry="5" fill="#1e2c34" stroke="${sk}" stroke-width="0.5"/>
+
+  <!-- SHINS / TIBIALIS - left -->
+  <path d="M50,236 Q46,252 47,272 Q50,282 56,284 Q62,280 64,268 Q65,250 62,236 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Tibialis anterior ridge -->
+  <path d="M54,240 Q53,258 54,276" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <!-- SHINS / TIBIALIS - right -->
+  <path d="M110,236 Q114,252 113,272 Q110,282 104,284 Q98,280 96,268 Q95,250 98,236 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M106,240 Q107,258 106,276" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- CALVES front visible edge - left -->
+  <path d="M62,236 Q66,250 66,268 Q64,280 60,284 Q64,286 68,282 Q72,268 70,248 Q68,238 66,236 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}" opacity="0.7"/>
+  <!-- CALVES front - right -->
+  <path d="M98,236 Q94,250 94,268 Q96,280 100,284 Q96,286 92,282 Q88,268 90,248 Q92,238 94,236 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}" opacity="0.7"/>
+
+  <!-- FEET - left -->
+  <path d="M47,282 Q44,290 44,296 Q48,302 58,303 Q66,302 68,298 Q66,286 56,284 Z"
+    fill="#141c20" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- FEET - right -->
+  <path d="M113,282 Q116,290 116,296 Q112,302 102,303 Q94,302 92,298 Q94,286 104,284 Z"
+    fill="#141c20" stroke="${sk}" stroke-width="${sw}"/>
+  </svg>`;
+}
+
+function buildBackSVG(mr){
+  const f=m=>mFill(m,mr),g=m=>mGlow(m,mr);
+  const sk='#0d1a20', sw='0.8', dim='#1a2830cc';
+  return `<svg viewBox="0 0 160 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgHead" cx="50%" cy="40%"><stop offset="0%" stop-color="#2a3d48"/><stop offset="100%" stop-color="#141c20"/></radialGradient>
+    <linearGradient id="bgLatG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1a2830"/><stop offset="100%" stop-color="#0f1820"/></linearGradient>
+  </defs>
+
+  <!-- HEAD back -->
+  <ellipse cx="80" cy="20" rx="16" ry="18" fill="url(#bgHead)" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Occipital line -->
+  <path d="M67,26 Q80,30 93,26" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- NECK -->
+  <path d="M73,36 Q74,44 74,50 L86,50 Q86,44 87,36 Z" fill="#1d2c34" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Neck trapezius muscle base -->
+  <path d="M68,36 Q70,44 72,50" fill="none" stroke="#263540" stroke-width="0.6"/>
+  <path d="M92,36 Q90,44 88,50" fill="none" stroke="#263540" stroke-width="0.6"/>
+
+  <!-- TRAPS - upper (diamond shape over shoulders and neck base) -->
+  <path d="M74,36 Q62,42 50,54 Q44,60 46,68 Q56,64 68,58 Q74,54 80,52 Q86,54 92,58 Q104,64 114,68 Q116,60 110,54 Q98,42 86,36 Z"
+    style="${g('traps')}" fill="${f('traps')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Traps midline crease -->
+  <path d="M80,38 Q79,46 80,54" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.6"/>
+  <!-- Traps shoulder edge -->
+  <path d="M50,54 Q52,62 54,68" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+  <path d="M110,54 Q108,62 106,68" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- REAR DELTS - left -->
+  <path d="M44,64 Q36,66 34,76 Q34,86 40,92 Q48,88 50,76 Q52,68 48,64 Z"
+    style="${g('front-delt')}" fill="${f('front-delt')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- REAR DELTS - right -->
+  <path d="M116,64 Q124,66 126,76 Q126,86 120,92 Q112,88 110,76 Q108,68 112,64 Z"
+    style="${g('front-delt')}" fill="${f('front-delt')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Delt crease -->
+  <path d="M38,72 Q38,80 40,86" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+  <path d="M122,72 Q122,80 120,86" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- LATS - left -->
+  <path d="M50,72 Q42,84 42,106 Q44,118 52,122 Q60,116 64,100 Q66,84 60,72 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Lat striations -->
+  <path d="M46,80 Q44,96 46,110" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.4"/>
+  <!-- LATS - right -->
+  <path d="M110,72 Q118,84 118,106 Q116,118 108,122 Q100,116 96,100 Q94,84 100,72 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M114,80 Q116,96 114,110" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- TRICEPS - left (posterior view, long + lateral head) -->
+  <path d="M38,88 Q32,96 32,114 Q32,126 40,130 Q46,122 48,108 Q50,94 44,88 Z"
+    style="${g('triceps')}" fill="${f('triceps')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Triceps long/lateral separation -->
+  <path d="M40,92 Q38,108 40,122" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.6"/>
+  <!-- TRICEPS - right -->
+  <path d="M122,88 Q128,96 128,114 Q128,126 120,130 Q114,122 112,108 Q110,94 116,88 Z"
+    style="${g('triceps')}" fill="${f('triceps')}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M120,92 Q122,108 120,122" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.6"/>
+
+  <!-- FOREARMS - left -->
+  <path d="M38,128 Q32,136 33,152 Q36,158 42,157 Q48,154 50,146 Q48,130 44,127 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- FOREARMS - right -->
+  <path d="M122,128 Q128,136 127,152 Q124,158 118,157 Q112,154 110,146 Q112,130 116,127 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+
+  <!-- LOWER BACK / ERECTOR SPINAE -->
+  <path d="M64,118 Q58,124 56,134 Q56,144 60,148 Q68,150 80,150 Q92,150 100,148 Q104,144 104,134 Q102,124 96,118 Q88,116 80,116 Q72,116 64,118 Z"
+    style="${g('lower-back')}" fill="${f('lower-back')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Erector columns -->
+  <path d="M74,118 Q72,130 72,148" fill="none" stroke="${sk}" stroke-width="0.7" opacity="0.6"/>
+  <path d="M86,118 Q88,130 88,148" fill="none" stroke="${sk}" stroke-width="0.7" opacity="0.6"/>
+  <!-- Lumbar dimples -->
+  <circle cx="74" cy="146" r="1.5" fill="${sk}" opacity="0.5"/>
+  <circle cx="86" cy="146" r="1.5" fill="${sk}" opacity="0.5"/>
+
+  <!-- GLUTES - left -->
+  <path d="M58,148 Q46,154 44,168 Q44,182 52,190 Q62,192 70,184 Q76,172 74,156 Q68,148 58,148 Z"
+    style="${g('glutes')}" fill="${f('glutes')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Gluteal fold -->
+  <path d="M46,178 Q54,188 66,188" fill="none" stroke="${sk}" stroke-width="0.7" opacity="0.6"/>
+  <!-- GLUTES - right -->
+  <path d="M102,148 Q114,154 116,168 Q116,182 108,190 Q98,192 90,184 Q84,172 86,156 Q92,148 102,148 Z"
+    style="${g('glutes')}" fill="${f('glutes')}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M114,178 Q106,188 94,188" fill="none" stroke="${sk}" stroke-width="0.7" opacity="0.6"/>
+  <!-- Glute crease between -->
+  <path d="M80,150 Q79,168 80,190" fill="none" stroke="${sk}" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- HAMSTRINGS - left (biceps femoris + semitendinosus) -->
+  <path d="M52,190 Q44,202 44,224 Q46,236 54,240 Q62,236 66,220 Q68,202 66,190 Z"
+    style="${g('hamstrings')}" fill="${f('hamstrings')}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Ham separation line -->
+  <path d="M58,194 Q56,212 57,230" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <!-- HAMSTRINGS - right -->
+  <path d="M108,190 Q116,202 116,224 Q114,236 106,240 Q98,236 94,220 Q92,202 94,190 Z"
+    style="${g('hamstrings')}" fill="${f('hamstrings')}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M102,194 Q104,212 103,230" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- KNEES back -->
+  <ellipse cx="58" cy="242" rx="11" ry="8" fill="#1a2830" stroke="${sk}" stroke-width="${sw}"/>
+  <ellipse cx="102" cy="242" rx="11" ry="8" fill="#1a2830" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Popliteal fossa crease -->
+  <path d="M50,238 Q58,244 66,238" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+  <path d="M94,238 Q102,244 110,238" fill="none" stroke="${sk}" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- CALVES - left (gastrocnemius medial + lateral heads) -->
+  <path d="M50,250 Q44,262 46,278 Q50,290 58,292 Q64,286 66,272 Q66,256 62,248 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- Calf medial head -->
+  <path d="M60,250 Q64,262 64,276 Q62,288 58,292 Q62,292 66,286 Q70,272 68,256 Q66,248 62,248 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}" opacity="0.7"/>
+  <!-- Calf midline -->
+  <path d="M58,252 Q57,268 58,282" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+  <!-- CALVES - right -->
+  <path d="M110,250 Q116,262 114,278 Q110,290 102,292 Q96,286 94,272 Q94,256 98,248 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}"/>
+  <path d="M100,250 Q96,262 96,276 Q98,288 102,292 Q98,292 94,286 Q90,272 92,256 Q94,248 98,248 Z"
+    fill="${dim}" stroke="${sk}" stroke-width="${sw}" opacity="0.7"/>
+  <path d="M102,252 Q103,268 102,282" fill="none" stroke="${sk}" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- FEET - left -->
+  <path d="M46,290 Q44,298 44,304 Q48,310 58,310 Q66,308 68,304 Q66,294 58,292 Z"
+    fill="#141c20" stroke="${sk}" stroke-width="${sw}"/>
+  <!-- FEET - right -->
+  <path d="M114,290 Q116,298 116,304 Q112,310 102,310 Q94,308 92,304 Q94,294 102,292 Z"
+    fill="#141c20" stroke="${sk}" stroke-width="${sw}"/>
+  </svg>`;
+}
+
+const MUSCLE_NAMES={
+  'chest':'Chest','upper-chest':'Upper Chest','front-delt':'Shoulders',
+  'triceps':'Triceps','quads':'Quadriceps','glutes':'Glutes',
+  'hamstrings':'Hamstrings','lower-back':'Lower Back','traps':'Traps',
+};
+
+function renderMuscleLegend(mr){
+  const grid=document.getElementById('muscle-legend-grid');
+  grid.innerHTML='';
+  Object.entries(MUSCLE_NAMES).forEach(([key,label])=>{
+    const ri=mr[key];
+    const rank=ri!==undefined?RANKS[ri]:null;
+    const div=document.createElement('div');div.className='ml-item';
+    div.innerHTML=`
+      <span class="ml-dot" style="background:${rank?rank.color:'#1e2a30'}"></span>
+      <span class="ml-name">${label}</span>
+      ${rank?`<span class="ml-rank" style="color:${rank.color}">${rank.emoji} ${rank.name}</span>`:`<span class="ml-no">No data</span>`}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  STATS & ANALYTICS
+// ══════════════════════════════════════════════════════
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function renderStats(){
+  const con=document.getElementById('stats-content');
+  // collect all entries across lifts
+  const allEntries=[];
+  LIFTS.forEach(l=>state[l.id].history.forEach(e=>allEntries.push({...e,liftId:l.id,liftName:l.name})));
+  allEntries.sort((a,b)=>a.ts-b.ts);
+
+  if(!allEntries.length){
+    con.innerHTML=`<div class="stats-empty"><div class="stats-empty-icon">📊</div>Log some sessions to see your analytics</div>`;
+    return;
+  }
+
+  // ── SUMMARY ──────────────────────────────────────────
+  const totalSessions=allEntries.length;
+  const totalVol=allEntries.reduce((s,e)=>s+e.w*e.reps,0);
+  const totalReps=allEntries.reduce((s,e)=>s+e.reps,0);
+  const liftsLogged=LIFTS.filter(l=>state[l.id].history.length>0).length;
+
+  // ── STREAK ───────────────────────────────────────────
+  // group sessions by calendar day
+  const daySet=new Set(allEntries.map(e=>new Date(e.ts).toDateString()));
+  const sortedDays=[...daySet].map(d=>new Date(d)).sort((a,b)=>a-b);
+  let curStreak=0,maxStreak=0,streak=1;
+  for(let i=1;i<sortedDays.length;i++){
+    const diff=(sortedDays[i]-sortedDays[i-1])/(1000*60*60*24);
+    if(diff===1){streak++;maxStreak=Math.max(maxStreak,streak);}
+    else{streak=1;}
+  }
+  maxStreak=Math.max(maxStreak,streak);
+  // current streak: count from most recent day backwards
+  if(sortedDays.length){
+    const today=new Date();today.setHours(0,0,0,0);
+    const last=new Date(sortedDays[sortedDays.length-1]);last.setHours(0,0,0,0);
+    const diffToToday=(today-last)/(1000*60*60*24);
+    if(diffToToday<=1){
+      curStreak=1;
+      for(let i=sortedDays.length-2;i>=0;i--){
+        const d1=new Date(sortedDays[i+1]);d1.setHours(0,0,0,0);
+        const d2=new Date(sortedDays[i]);d2.setHours(0,0,0,0);
+        if((d1-d2)/(1000*60*60*24)===1)curStreak++;else break;
+      }
+    }
+  }
+
+  // ── VOLUME BY LIFT ────────────────────────────────────
+  const volByLift={};
+  LIFTS.forEach(l=>{
+    volByLift[l.id]=state[l.id].history.reduce((s,e)=>s+e.w*e.reps,0);
+  });
+  const maxVol=Math.max(...Object.values(volByLift),1);
+
+  // ── DAY OF WEEK ───────────────────────────────────────
+  const dowCounts=[0,0,0,0,0,0,0];
+  allEntries.forEach(e=>dowCounts[new Date(e.ts).getDay()]++);
+  const maxDow=Math.max(...dowCounts,1);
+  const bestDow=dowCounts.indexOf(Math.max(...dowCounts));
+
+  // ── AVG REPS ──────────────────────────────────────────
+  const avgReps={};
+  LIFTS.forEach(l=>{
+    const h=state[l.id].history;
+    avgReps[l.id]=h.length?Math.round(h.reduce((s,e)=>s+e.reps,0)/h.length):0;
+  });
+
+  // ── CUMULATIVE VOLUME TREND ───────────────────────────
+  // build cumulative vol per session (all lifts combined, chronological)
+  const cumVols=[];let cum=0;
+  allEntries.forEach(e=>{cum+=e.w*e.reps;cumVols.push(cum);});
+
+  // ── BEST SINGLE-SESSION VOLUME per lift ───────────────
+  const bestSessVol={};
+  LIFTS.forEach(l=>{
+    const h=state[l.id].history;
+    bestSessVol[l.id]=h.length?Math.max(...h.map(e=>e.w*e.reps)):0;
+  });
+
+  // ── BUILD HTML ────────────────────────────────────────
+  const fmtVol=v=>v>=1000?`${(v/1000).toFixed(1)}k`:v+'';
+
+  con.innerHTML=`
+    <!-- SUMMARY PILLS -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>📋</span> Overview</div>
+      <div class="stats-pills">
+        <div class="stat-pill">
+          <div class="stat-pill-num">${totalSessions}</div>
+          <div class="stat-pill-lbl">Total Sets</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num">${fmtVol(totalVol)}</div>
+          <div class="stat-pill-lbl">Total Vol (lbs)</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num">${totalReps}</div>
+          <div class="stat-pill-lbl">Total Reps</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num">${liftsLogged}</div>
+          <div class="stat-pill-lbl">Lifts Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STREAKS -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>🔥</span> Training Streaks</div>
+      <div class="streak-row">
+        <div class="streak-card">
+          <div class="streak-icon">🔥</div>
+          <div>
+            <div class="streak-num" style="color:${curStreak>0?'#f97316':'var(--muted)'}">${curStreak}</div>
+            <div class="streak-lbl">Current Streak (days)</div>
+          </div>
+        </div>
+        <div class="streak-card">
+          <div class="streak-icon">🏆</div>
+          <div>
+            <div class="streak-num" style="color:var(--accent)">${maxStreak}</div>
+            <div class="streak-lbl">Best Streak (days)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUMULATIVE VOLUME TREND -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>📈</span> Cumulative Volume Trend</div>
+      <div class="vol-chart-wrap">
+        <div class="vol-chart-header">
+          <div class="vol-chart-title">Total volume lifted over all sessions</div>
+          <div class="vol-chart-total">${fmtVol(totalVol)} lbs lifetime</div>
+        </div>
+        <canvas class="vol-canvas" id="vol-trend-cvs" height="80"></canvas>
+      </div>
+    </div>
+
+    <!-- VOLUME BY LIFT -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>⚖️</span> Volume by Lift</div>
+      <div class="lift-vol-list">
+        ${LIFTS.map(l=>{
+          const v=volByLift[l.id];
+          const ri=state[l.id].bestOrm>0?rankIdx(l,state[l.id].bestOrm):-1;
+          const col=ri>=0?RANKS[ri].color:'#1e2a30';
+          const pct=v>0?Math.round((v/maxVol)*100):0;
+          return `<div class="lift-vol-row">
+            <div class="lift-vol-name">${l.name}</div>
+            <div class="lift-vol-bar-track"><div class="lift-vol-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+            <div class="lift-vol-val">${v?fmtVol(v)+' lbs':'—'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- DAY OF WEEK -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>📅</span> Sessions by Day</div>
+      <div class="dow-grid">
+        ${DAYS.map((day,i)=>{
+          const cnt=dowCounts[i];
+          const pct=Math.round((cnt/maxDow)*100);
+          const col=cnt>0?(i===bestDow?'var(--accent)':'#3ddc84'):'var(--border)';
+          return `<div class="dow-cell">
+            <div class="dow-day">${day}</div>
+            <div class="dow-count" style="color:${col}">${cnt||'—'}</div>
+            <div class="dow-pip" style="background:${col};width:${pct}%;margin:0 auto;"></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- AVG REPS PER LIFT -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>🔁</span> Avg Reps per Lift</div>
+      <div class="avg-reps-grid">
+        ${LIFTS.map(l=>{
+          const avg=avgReps[l.id];
+          const ri=state[l.id].bestOrm>0?rankIdx(l,state[l.id].bestOrm):-1;
+          const col=ri>=0?RANKS[ri].color:'var(--muted)';
+          return `<div class="avg-rep-card">
+            <div class="avg-rep-name">${l.name}</div>
+            <div class="avg-rep-num" style="color:${avg?col:'var(--muted)'}">${avg||'—'}</div>
+            <div class="avg-rep-sub">avg reps</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- BEST SESSION VOLUME -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>💥</span> Best Single-Set Volume</div>
+      <div class="best-sess-grid">
+        ${LIFTS.map(l=>{
+          const v=bestSessVol[l.id];
+          const bestE=state[l.id].history.length?state[l.id].history.reduce((a,b)=>b.w*b.reps>a.w*a.reps?b:a):null;
+          const ri=state[l.id].bestOrm>0?rankIdx(l,state[l.id].bestOrm):-1;
+          const col=ri>=0?RANKS[ri].color:'var(--muted)';
+          return `<div class="best-sess-card">
+            <div class="best-sess-lift">${l.name}</div>
+            <div class="best-sess-val" style="color:${v?col:'var(--muted)'}">${v?fmtVol(v)+' lbs':'—'}</div>
+            ${bestE?`<div class="best-sess-sub">${bestE.reps}×${bestE.w}lbs</div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- STRENGTH RATIOS -->
+    <div class="stats-section">
+      <div class="stats-section-title"><span>⚖️</span> Strength Ratios</div>
+      ${buildRatiosHTML()}
+    </div>
+  `;
+
+  // ── DRAW CUMULATIVE VOLUME TREND CHART ────────────────
+  requestAnimationFrame(()=>{
+    const cvs=document.getElementById('vol-trend-cvs');
+    if(!cvs||cumVols.length<1)return;
+    const dpr=window.devicePixelRatio||1;
+    const W=cvs.offsetWidth,H=80;
+    cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.height=H+'px';
+    const ctx=cvs.getContext('2d');ctx.scale(dpr,dpr);
+    const PL=4,PR=4,PT=6,PB=4;
+    const cw=W-PL-PR,ch=H-PT-PB;
+    const minV=0,maxV=cumVols[cumVols.length-1]||1;
+    const xOf=i=>PL+((cumVols.length>1?i/(cumVols.length-1):0.5)*cw);
+    const yOf=v=>PT+(1-v/maxV)*ch;
+    // gradient fill
+    const grad=ctx.createLinearGradient(0,PT,0,H);
+    grad.addColorStop(0,'rgba(0,212,255,0.3)');grad.addColorStop(1,'rgba(0,212,255,0)');
+    ctx.beginPath();ctx.moveTo(xOf(0),yOf(cumVols[0]));
+    for(let i=1;i<cumVols.length;i++)ctx.lineTo(xOf(i),yOf(cumVols[i]));
+    ctx.lineTo(xOf(cumVols.length-1),H);ctx.lineTo(xOf(0),H);ctx.closePath();
+    ctx.fillStyle=grad;ctx.fill();
+    // line
+    ctx.beginPath();ctx.moveTo(xOf(0),yOf(cumVols[0]));
+    for(let i=1;i<cumVols.length;i++)ctx.lineTo(xOf(i),yOf(cumVols[i]));
+    ctx.strokeStyle='#00d4ff';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+    // endpoint dot
+    if(cumVols.length>0){
+      const ex=xOf(cumVols.length-1),ey=yOf(cumVols[cumVols.length-1]);
+      ctx.beginPath();ctx.arc(ex,ey,3.5,0,Math.PI*2);ctx.fillStyle='#00d4ff';ctx.fill();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  REST TIMER
+// ══════════════════════════════════════════════════════
+let timerDuration=90; // default rest seconds
+let timerRemaining=0;
+let timerTotal=0;
+let timerInterval=null;
+let timerRunning=false;
+
+const CIRC=2*Math.PI*18; // circumference for r=18
+
+function updateTimerUI(){
+  const pct=timerTotal>0?timerRemaining/timerTotal:1;
+  const el=document.getElementById('rest-timer');
+  const arc=document.getElementById('rt-arc');
+  const disp=document.getElementById('rt-display');
+  if(!el)return;
+  arc.style.strokeDasharray=CIRC;
+  arc.style.strokeDashoffset=CIRC*(1-pct);
+  disp.textContent=timerRemaining>0?timerRemaining:'✓';
+  if(timerRemaining<=0){
+    arc.style.stroke='var(--green,#3ddc84)';
+    disp.style.color='#3ddc84';
+    el.classList.add('done');
+    setTimeout(()=>el.classList.remove('done'),1100);
+    // vibrate if supported
+    if(navigator.vibrate)navigator.vibrate([200,100,200]);
+  } else if(timerRemaining<=10){
+    arc.style.stroke='#f97316';
+    disp.style.color='#f97316';
+  } else {
+    arc.style.stroke='var(--accent)';
+    disp.style.color='var(--text)';
+  }
+  // highlight active preset button
+  document.querySelectorAll('.rt-preset').forEach(b=>{
+    b.classList.toggle('active-preset',parseInt(b.textContent)===timerTotal||
+      (b.textContent==='1m'&&timerTotal===60)||(b.textContent==='90s'&&timerTotal===90)||
+      (b.textContent==='2m'&&timerTotal===120)||(b.textContent==='3m'&&timerTotal===180));
+  });
+}
+
+function startTimer(secs){
+  clearInterval(timerInterval);
+  timerDuration=secs;
+  timerTotal=secs;
+  timerRemaining=secs;
+  timerRunning=true;
+  document.getElementById('rest-timer').classList.add('visible');
+  updateTimerUI();
+  timerInterval=setInterval(()=>{
+    if(!timerRunning)return;
+    timerRemaining=Math.max(0,timerRemaining-1);
+    updateTimerUI();
+    if(timerRemaining<=0){clearInterval(timerInterval);timerRunning=false;}
+  },1000);
+}
+
+function pauseTimer(){
+  if(timerRemaining<=0)return;
+  timerRunning=!timerRunning;
+  document.querySelector('.rt-btn').textContent=timerRunning?'⏸ Pause':'▶ Resume';
+}
+
+function resetTimer(){
+  clearInterval(timerInterval);
+  timerRemaining=timerTotal;
+  timerRunning=false;
+  document.querySelector('.rt-btn').textContent='⏸ Pause';
+  updateTimerUI();
+}
+
+function hideTimer(){
+  clearInterval(timerInterval);
+  timerRunning=false;
+  document.getElementById('rest-timer').classList.remove('visible');
+}
+
+// init arc
+window.addEventListener('DOMContentLoaded',()=>{
+  const arc=document.getElementById('rt-arc');
+  if(arc){arc.style.strokeDasharray=CIRC;arc.style.strokeDashoffset=CIRC;}
+});
+
+// ══════════════════════════════════════════════════════
+//  DELOAD DETECTOR
+// ══════════════════════════════════════════════════════
+function renderDeloadBanner(id){
+  const el=document.getElementById(`deload-${id}`);
+  if(!el)return;
+  const hist=state[id].history;
+  // Need at least 3 sessions; check if last 2 are both lower than the one before
+  if(hist.length<3){el.innerHTML='';return;}
+  const last=hist[hist.length-1].orm;
+  const prev=hist[hist.length-2].orm;
+  const prev2=hist[hist.length-3].orm;
+  const dropping2=last<prev&&prev<prev2;
+  const dropping1=last<prev;
+  if(dropping2){
+    const drop=prev2-last;
+    el.innerHTML=`<div class="deload-banner"><span class="deload-icon">📉</span>1RM dropped ${drop}lb over last 3 sessions — consider a deload week or check recovery.</div>`;
+  } else if(dropping1&&hist.length>=2){
+    const drop=prev-last;
+    el.innerHTML=`<div class="deload-banner"><span class="deload-icon">⚠️</span>1RM down ${drop}lb from last session — could be fatigue.</div>`;
+  } else {
+    el.innerHTML='';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  STRENGTH RATIOS
+// ══════════════════════════════════════════════════════
+// Pairs: [liftA id, liftB id, label, ideal ratio A:B, description]
+// ratio = bestOrm(A) / bestOrm(B), ideal target
+const RATIOS=[
+  {a:'bench',   b:'squat',    label:'Bench / Squat',       ideal:0.75, note:'Bench should be ~75% of squat'},
+  {a:'bench',   b:'deadlift', label:'Bench / Deadlift',    ideal:0.63, note:'Bench ~63% of deadlift'},
+  {a:'squat',   b:'deadlift', label:'Squat / Deadlift',    ideal:0.85, note:'Squat ~85% of deadlift'},
+  {a:'incline', b:'bench',    label:'Incline / Bench',     ideal:0.80, note:'Incline ~80% of flat bench'},
+  {a:'dips',    b:'bench',    label:'Weighted Dips / Bench',ideal:0.70,note:'Dips ~70% of bench (added weight)'},
+];
+
+function buildRatiosHTML(){
+  const orms={};
+  LIFTS.forEach(l=>{orms[l.id]=state[l.id].bestOrm||0;});
+
+  const rows=RATIOS.map(r=>{
+    const a=orms[r.a],b=orms[r.b];
+    if(!a||!b){
+      return `<div class="ratio-row">
+        <div class="ratio-header">
+          <span class="ratio-name">${r.label}</span>
+          <span class="ratio-status" style="color:var(--muted)">No data</span>
+        </div>
+        <div class="ratio-note">${r.note}</div>
+      </div>`;
+    }
+    const actual=a/b;
+    const pct=Math.min(1,actual/r.ideal); // how close to ideal (can exceed 1 = over)
+    const diff=actual-r.ideal;
+    const absDiff=Math.abs(diff);
+    const pctDiff=Math.round(absDiff/r.ideal*100);
+    let status,color,barColor;
+    if(actual>=r.ideal*0.95&&actual<=r.ideal*1.12){
+      status='✓ Balanced';color='#3ddc84';barColor='#3ddc84';
+    } else if(actual<r.ideal*0.95){
+      status=`↑ ${pctDiff}% low`;color='#f97316';barColor='#f97316';
+    } else {
+      status=`↑ Strong`;color='var(--accent)';barColor='var(--accent)';
+    }
+    const barW=Math.min(100,Math.round(pct*100));
+    return `<div class="ratio-row">
+      <div class="ratio-header">
+        <span class="ratio-name">${r.label}</span>
+        <span class="ratio-status" style="color:${color}">${status}</span>
+      </div>
+      <div class="ratio-bar-track"><div class="ratio-bar-fill" style="width:${barW}%;background:${barColor}"></div></div>
+      <div class="ratio-meta">
+        <span>${a}lb / ${b}lb = ${(actual*100).toFixed(0)}%</span>
+        <span>Target: ${Math.round(r.ideal*100)}%</span>
+      </div>
+      <div class="ratio-note">${r.note}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="ratio-list">${rows}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════
+let toastT;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600);}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+loadState();buildLegend();buildCards();
+</script>
+</body>
+</html>
