@@ -825,7 +825,7 @@ function mFill(muscle,mr){
 function mGlow(muscle,mr){
   if(mr[muscle]===undefined)return'';
   const ri=mr[muscle];
-  const sc=(1+ri/11*0.20).toFixed(3);
+  const sc=(1+ri/11*1.50).toFixed(3);
   const blur=4+ri;
   const alpha=ri>5?'bb':'88';
   return`transform-box:fill-box;transform-origin:center;transform:scale(${sc});filter:drop-shadow(0 0 ${blur}px ${RANKS[ri].color}${alpha});`;
